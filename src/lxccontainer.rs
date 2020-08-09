@@ -1,4 +1,4 @@
-use std::os::raw::{c_char, c_int, c_uint, c_void};
+use std::os::raw::{c_char, c_int, c_uint, c_ulong, c_void};
 
 /// Do not edit the rootfs to change the hostname
 ///
@@ -30,6 +30,11 @@ pub const LXC_CLONE_MAYBE_SNAPSHOT: u32 = 1 << 4;
 /// ---
 /// **version:** 1.0.0
 pub const LXC_CLONE_MAXFLAGS: u32 = 1 << 5;
+/// allow snapshot creation even if source container is running
+///
+/// ---
+/// **version:** 4.0.0
+pub const LXC_CLONE_ALLOW_RUNNING: u32 = 1 << 6;
 /// Redirect `stdin` to `/dev/zero` and `stdout` and `stderr` to `/dev/null`
 ///
 /// ---
@@ -40,6 +45,11 @@ pub const LXC_CREATE_QUIET: u32 = 1 << 0;
 /// ---
 /// **version:** 1.0.0
 pub const LXC_CREATE_MAXFLAGS: u32 = 1 << 1;
+/// No doc
+///
+/// ---
+/// **version:** 4.0.0
+pub const LXC_MOUNT_API_V1: u32 = 1;
 
 /// Internal struct
 ///
@@ -49,6 +59,19 @@ pub const LXC_CREATE_MAXFLAGS: u32 = 1 << 1;
 #[derive(Debug, Copy, Clone)]
 pub struct lxc_lock {
     _unused: [u8; 0],
+}
+/// lxc_mount struct
+///
+/// ---
+/// **version:** 4.0.0
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lxc_mount {
+    /// No Doc
+    ///
+    /// ---
+    /// **version:** 4.0.0
+    pub version: c_int,
 }
 
 /// An LXC container.
@@ -1472,6 +1495,63 @@ pub struct lxc_container {
     /// **version:** 3.0.0
     pub reboot2:
         unsafe extern "C" fn(c: *mut lxc_container, timeout: c_int) -> bool,
+
+    /// Mount the host's path `source` onto the container's path `target`.
+    ///
+    /// ---
+    /// **version:** 4.0.0
+    pub mount: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        source: *mut c_char,
+        target: *mut c_char,
+        filesystemtype: *const c_char,
+        mountflags: c_ulong,
+        data: *const c_void,
+        mnt: *mut lxc_mount,
+    ) -> bool,
+
+    /// Unmount the container's path `target`.
+    ///
+    /// ---
+    /// **version:** 4.0.0
+    pub umount: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        target: *mut c_char,
+        mountflags: c_ulong,
+        mnt: *mut lxc_mount,
+    ) -> bool,
+
+    /// Retrieve a file descriptor for the container's seccomp filter.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// file descriptor for container's seccomp filter
+    ///
+    /// ---
+    /// **version:** 4.0.0
+    pub seccomp_notify_fd: unsafe extern "C" fn(c: *mut lxc_container) -> c_int,
+
+    /// Retrieve a pidfd for the container's init process.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// pidfd of init process of the container.
+    ///
+    /// ---
+    /// **version:** 4.0.0
+    pub init_pidfd: unsafe extern "C" fn(c: *mut lxc_container) -> c_int,
 }
 
 /// An LXC container snapshot.
@@ -2027,4 +2107,15 @@ extern "C" {
     /// ---
     /// **version:** 2.1.0
     pub fn lxc_config_item_is_supported(key: *mut c_char) -> bool;
+
+    /// Check if an API extension is supported by this LXC instance.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **extension** API extension to check for.
+    ///
+    /// ---
+    /// **version:** 4.0.0
+    pub fn lxc_has_api_extension(extension: *mut c_char) -> bool;
 }
