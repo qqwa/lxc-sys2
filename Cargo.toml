@@ -1,6 +1,6 @@
 [package]
 name = "lxc-sys2"
-version = "1.0.4"
+version = "1.0.11"
 authors = ["Benjamin Bäumler <benjamin.baeumler@qqwa.de>"]
 edition = "2018"
 license = "LGPL-2.1+"

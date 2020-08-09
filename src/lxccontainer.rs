@@ -282,7 +282,7 @@ pub struct lxc_container {
     /// **version:** 1.0.0
     pub stop: unsafe extern "C" fn(c: *mut lxc_container) -> bool,
 
-    /// Determine if the container wants to run disconnected
+    /// Change whether the container wants to run disconnected
     /// from the terminal.
     ///
     /// ---
@@ -295,14 +295,14 @@ pub struct lxc_container {
     /// ---
     /// **Returns**
     ///
-    /// `true` if container wants to be daemonised, else `false`.
+    /// `true` on success, else `false`.
     ///
     /// ---
     /// **version:** 1.0.0
     pub want_daemonize:
         unsafe extern "C" fn(c: *mut lxc_container, state: bool) -> bool,
 
-    /// Determine whether container wishes all file descriptors
+    /// Change whether the container wishes all file descriptors
     /// to be closed on startup.
     ///
     /// ---
@@ -315,8 +315,7 @@ pub struct lxc_container {
     /// ---
     /// **Returns**
     ///
-    /// `true` if container wants all file descriptors closed,
-    /// else `false`.
+    /// `true` on success, else `false`.
     ///
     /// ---
     /// **version:** 1.0.0
@@ -629,8 +628,8 @@ pub struct lxc_container {
     ///
     /// **note:** If `retv` is NULL, `inlen` is ignored.
     ///
-    /// **note:** If `inlen` is smaller than required, the value written to
-    /// `retv` will be truncated.
+    /// **note:** If `inlen` is smaller than required, nothing will be written
+    /// to `retv` and still return the length of config item value.
     ///
     /// ---
     /// **version:** 1.0.0
@@ -931,7 +930,7 @@ pub struct lxc_container {
     /// **ttynum** *in,out* Terminal number to attempt to allocate, or `-1` to
     /// allocate the first available tty.
     ///
-    /// **masterfd** *out* File descriptor refering to the master side of the
+    /// **masterfd** *out* File descriptor referring to the master side of the
     /// pty.
     ///
     /// ---
