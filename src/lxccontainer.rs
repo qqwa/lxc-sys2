@@ -1863,10 +1863,64 @@ extern "C" {
         names: *mut *mut *mut c_char,
         cret: *mut *mut *mut lxc_container,
     ) -> c_int;
+}
+
+/// ---
+/// **version:** 2.1.0
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lxc_log {
+    /// ---
+    /// **version:** 2.1.0
+    pub name: *const c_char,
+
+    /// ---
+    /// **version:** 2.1.0
+    pub lxcpath: *const c_char,
+
+    /// ---
+    /// **version:** 2.1.0
+    pub file: *const c_char,
+
+    /// ---
+    /// **version:** 2.1.0
+    pub level: *const c_char,
+
+    /// ---
+    /// **version:** 2.1.0
+    pub prefix: *const c_char,
+
+    /// ---
+    /// **version:** 2.1.0
+    pub quiet: bool,
+}
+
+extern "C" {
+    /// Initialize the log
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **log** lxc log configuration.
+    ///
+    /// ---
+    /// **version:** 2.1.0
+    pub fn lxc_log_init(log: *mut lxc_log) -> c_int;
 
     /// Close log file.
     ///
     /// ---
     /// **version:** 1.0.2
     pub fn lxc_log_close();
+
+    /// Check if the configuration item is supported by this LXC instance.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **key** Configuration item to check for.
+    ///
+    /// ---
+    /// **version:** 2.1.0
+    pub fn lxc_config_item_is_supported(key: *mut c_char) -> bool;
 }

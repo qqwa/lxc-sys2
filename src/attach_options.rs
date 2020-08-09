@@ -53,6 +53,11 @@ pub const LXC_ATTACH_REMOUNT_PROC_SYS: u32 = 0x00010000;
 /// ---
 /// **version:** 1.0.0
 pub const LXC_ATTACH_LSM_NOW: u32 = 0x00020000;
+/// Set PR_SET_NO_NEW_PRIVS to block execve() gainable privileges.
+///
+/// ---
+/// **version:** 2.1.0
+pub const LXC_ATTACH_NO_NEW_PRIVS: u32 = 0x00040000;
 
 /// Mask of flags to apply by default
 ///
