@@ -1,0 +1,13 @@
+[package]
+name = "lxc-sys2"
+version = "1.0.0"
+authors = ["Benjamin Bäumler <benjamin.baeumler@qqwa.de>"]
+edition = "2018"
+license = "LGPL-2.1+"
+description = "Native bindings for lxc library"
+repository = "https://github.com/qqwa/lxc-sys2"
+readme = "README.md"
+keywords = ["lxc", "ffi"]
+categories = ["external-ffi-bindings"]
+links = "lxc"
+build = "build.rs"
