@@ -1522,4 +1522,10 @@ extern "C" {
         names: *mut *mut *mut c_char,
         cret: *mut *mut *mut lxc_container,
     ) -> c_int;
+
+    /// Close log file.
+    ///
+    /// ---
+    /// **version:** 1.0.2
+    pub fn lxc_log_close();
 }
