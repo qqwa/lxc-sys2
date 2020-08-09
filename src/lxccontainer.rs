@@ -957,7 +957,7 @@ pub struct lxc_container {
     /// **ttynum** *in,out* Terminal number to attempt to allocate, or `-1` to
     /// allocate the first available tty.
     ///
-    /// **ptmxfd** *out* File descriptor referring to the ptmx side of the pty.
+    /// **ptxfd** *out* File descriptor referring to the ptx side of the pty.
     ///
     /// ---
     /// **Returns**
@@ -978,7 +978,7 @@ pub struct lxc_container {
     pub console_getfd: unsafe extern "C" fn(
         c: *mut lxc_container,
         ttynum: *mut c_int,
-        ptmxfd: *mut c_int,
+        ptxfd: *mut c_int,
     ) -> c_int,
 
     /// Allocate and run a console tty.
