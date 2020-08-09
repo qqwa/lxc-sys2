@@ -417,7 +417,7 @@ pub struct lxc_container {
     /// **version:** 1.0.0
     pub destroy: unsafe extern "C" fn(c: *mut lxc_container) -> bool,
 
-    /// Save configuaration to a file.
+    /// Save configuration to a file.
     ///
     /// ---
     /// **Parameters**
@@ -1431,6 +1431,47 @@ pub struct lxc_container {
         opts: *mut migrate_opts,
         size: c_uint,
     ) -> c_int,
+
+    /// Query the console log of a container.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// **log** A [lxc_console_log] struct filled with relevant options.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `0` on success, nonzero on failure.
+    ///
+    /// ---
+    /// **version:** 3.0.0
+    pub console_log: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        log: *mut lxc_console_log,
+    ) -> c_int,
+
+    /// Request the container reboot by sending it `SIGINT`.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// **timeout** Seconds to wait before returning false.
+    /// (-1 to wait forever, 0 to avoid waiting).
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `true` if the container was rebooted successfully, else `false`.
+    ///
+    /// ---
+    /// **version:** 3.0.0
+    pub reboot2:
+        unsafe extern "C" fn(c: *mut lxc_container, timeout: c_int) -> bool,
 }
 
 /// An LXC container snapshot.
@@ -1584,6 +1625,22 @@ pub const MIGRATE_DUMP: u32 = 1;
 /// ---
 /// **version:** 2.0.0
 pub const MIGRATE_RESTORE: u32 = 2;
+/// Command for the migrate API call.
+///
+/// ---
+/// **version:** 3.0.0
+pub const MIGRATE_FEATURE_CHECK: u32 = 3;
+
+/// Available feature checks.
+///
+/// ---
+/// **version:** 3.0.0
+pub const FEATURE_MEM_TRACK: u32 = 1 << 0;
+/// Available feature checks.
+///
+/// ---
+/// **version:** 3.0.0
+pub const FEATURE_LAZY_PAGES: u32 = 1 << 1;
 
 /// Options for the migrate API call.
 ///
@@ -1653,6 +1710,53 @@ pub struct migrate_opts {
     /// ---
     /// **version:** 2.0.4
     pub ghost_limit: u64,
+
+    /// Some features cannot be checked by comparing the CRIU version.
+    /// Features like dirty page tracking or userfaultfd depend on
+    /// the architecture/kernel/criu combination. This is a bitmask
+    /// in which the desired feature checks can be encoded.
+    ///
+    /// ---
+    /// **version:** 3.0.0
+    pub features_to_check: u64,
+}
+
+/// Doc missing
+///
+/// ---
+/// **version:** 3.0.0
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lxc_console_log {
+    /// Clear the console log.
+    ///
+    /// ---
+    /// **version:** 3.0.0
+    pub clear: bool,
+
+    /// Retrieve the console log.
+    ///
+    /// ---
+    /// **version:** 3.0.0
+    pub read: bool,
+
+    /// This specifies the maximum size to read from the ringbuffer. Setting
+    /// it to 0 means that the a read can be as big as the whole ringbuffer.
+    /// On return callers can check how many bytes were actually read.
+    /// If "read" and "clear" are set to false and a non-zero value is
+    /// specified then up to "read_max" bytes of data will be discarded from
+    /// the ringbuffer.
+    ///
+    /// ---
+    /// **version:** 3.0.0
+    pub read_max: *mut u64,
+
+    /// Data that was read from the ringbuffer. If "read_max" is 0 on return
+    /// "data" is invalid.
+    ///
+    /// ---
+    /// **version:** 3.0.0
+    pub data: *mut c_char,
 }
 
 extern "C" {

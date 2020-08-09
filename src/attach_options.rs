@@ -58,6 +58,11 @@ pub const LXC_ATTACH_LSM_NOW: u32 = 0x00020000;
 /// ---
 /// **version:** 2.1.0
 pub const LXC_ATTACH_NO_NEW_PRIVS: u32 = 0x00040000;
+/// Allocate new terminal for attached process.
+///
+/// ---
+/// **version:** 3.0.0
+pub const LXC_ATTACH_TERMINAL: u32 = 0x00080000;
 
 /// Mask of flags to apply by default
 ///
@@ -173,9 +178,17 @@ pub struct lxc_attach_options_t {
     /// ---
     /// **version:** 1.0.0
     pub stderr_fd: c_int,
+    /// File descriptor to log output.
+    ///
+    /// ---
+    /// **version:** 3.4.0
+    pub log_fd: c_int,
 }
 
 /// Default attach options to use
+///
+/// **log_fd** is set to `-EBADF`, which is `-9`. `EBADF` being a
+/// Bad file descriptor
 ///
 /// ---
 /// **version:** 1.0.0
@@ -194,6 +207,7 @@ impl std::default::Default for lxc_attach_options_t {
             stdin_fd: 0,
             stdout_fd: 1,
             stderr_fd: 2,
+            log_fd: -9,
         }
     }
 }
