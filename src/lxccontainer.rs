@@ -43,12 +43,6 @@ pub const LXC_CREATE_MAXFLAGS: u32 = 1 << 1;
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct bdev_specs {
-    _unused: [u8; 0],
-}
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
 pub struct lxc_lock {
     _unused: [u8; 0],
 }
@@ -1312,6 +1306,78 @@ pub struct lxc_snapshot {
     /// ---
     /// **version:** 1.0.0
     pub free: unsafe extern "C" fn(s: *mut lxc_snapshot) -> c_void,
+}
+
+/// Specifications for how to create a new backing store
+///
+/// ---
+/// **version:** 1.0.4
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct bdev_specs {
+    /// Filesystem type
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub fstype: *mut c_char,
+    /// Filesystem size in bytes
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub fssize: u64,
+    /// See [zfs].
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub zfs: zfs,
+    /// See [lvm].
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub lvm: lvm,
+    /// Directory path
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub dir: *mut c_char,
+}
+
+/// Internal struct used by [bdev_specs]
+///
+/// ---
+/// **version:** 1.0.4
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct zfs {
+    /// ZFS root path
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub zfsroot: *mut c_char,
+}
+
+/// Internal struct used by [bdev_specs]
+///
+/// ---
+/// **version:** 1.0.4
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lvm {
+    /// LVM Volume Group name
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub vg: *mut c_char,
+    /// LVM Logical Volume name
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub lv: *mut c_char,
+    /// LVM thin pool to use, if any
+    ///
+    /// ---
+    /// **version:** 1.0.4
+    pub thinpool: *mut c_char,
 }
 
 extern "C" {
