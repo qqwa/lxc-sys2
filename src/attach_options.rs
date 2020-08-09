@@ -48,7 +48,7 @@ pub const LXC_ATTACH_LSM_EXEC: u32 = 0x00000008;
 /// ---
 /// **version:** 1.0.0
 pub const LXC_ATTACH_REMOUNT_PROC_SYS: u32 = 0x00010000;
-/// FIXME: unknown
+/// TODO: currently unused
 ///
 /// ---
 /// **version:** 1.0.0
