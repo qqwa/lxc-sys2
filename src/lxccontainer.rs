@@ -41,6 +41,10 @@ pub const LXC_CREATE_QUIET: u32 = 1 << 0;
 /// **version:** 1.0.0
 pub const LXC_CREATE_MAXFLAGS: u32 = 1 << 1;
 
+/// Internal struct
+///
+/// ---
+/// **version:** 1.0.0
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct lxc_lock {
@@ -1399,6 +1403,34 @@ pub struct lxc_container {
     /// **version:** 1.1.0
     pub snapshot_destroy_all:
         unsafe extern "C" fn(c: *mut lxc_container) -> bool,
+
+    /// An API call to perform various migration operations
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// **cmd** One of the MIGRATE_ contstants
+    ///
+    /// **opts** A migrate_opts struct filled with relevant options.
+    ///
+    /// **size** The size of the migrate_opts struct, i.e.
+    /// sizeof(struct migrate_opts).
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `0` on success, nonzero on failure.
+    ///
+    /// ---
+    /// **version:** 2.0.0
+    pub migrate: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        cmd: c_uint,
+        opts: *mut migrate_opts,
+        size: c_uint,
+    ) -> c_int,
 }
 
 /// An LXC container snapshot.
@@ -1473,6 +1505,11 @@ pub struct bdev_specs {
     /// ---
     /// **version:** 1.0.4
     pub dir: *mut c_char,
+    /// See [rbd].
+    ///
+    /// ---
+    /// **version:** 2.0.0
+    pub rbd: rbd,
 }
 
 /// Internal struct used by [bdev_specs]
@@ -1511,6 +1548,78 @@ pub struct lvm {
     /// ---
     /// **version:** 1.0.4
     pub thinpool: *mut c_char,
+}
+
+/// Internal struct used by [bdev_specs]
+///
+/// ---
+/// **version:** 2.0.0
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct rbd {
+    /// RBD image name
+    ///
+    /// ---
+    /// **version:** 2.0.0
+    pub rbdname: *mut c_char,
+    /// Ceph pool name
+    ///
+    /// ---
+    /// **version:** 2.0.0
+    pub rbdpool: *mut c_char,
+}
+
+/// Command for the migrate API call.
+///
+/// ---
+/// **version:** 2.0.0
+pub const MIGRATE_PRE_DUMP: u32 = 0;
+/// Command for the migrate API call.
+///
+/// ---
+/// **version:** 2.0.0
+pub const MIGRATE_DUMP: u32 = 1;
+/// Command for the migrate API call.
+///
+/// ---
+/// **version:** 2.0.0
+pub const MIGRATE_RESTORE: u32 = 2;
+
+/// Options for the migrate API call.
+///
+/// ---
+/// **version:** 2.0.0
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct migrate_opts {
+    /// ---
+    /// **version:** 2.0.0
+    pub directory: *mut c_char,
+    /// ---
+    /// **version:** 2.0.0
+    pub verbose: bool,
+
+    /// stop the container after dump?
+    ///
+    /// ---
+    /// **version:** 2.0.0
+    pub stop: bool,
+
+    /// relative to directory above
+    ///
+    /// ---
+    /// **version:** 2.0.0
+    pub predump_dir: *mut c_char,
+
+    /// where should memory pages be send?
+    ///
+    /// ---
+    /// **version:** 2.0.0
+    pub pageserver_address: *mut c_char,
+
+    /// ---
+    /// **version:** 2.0.0
+    pub pageserver_port: *mut c_char,
 }
 
 extern "C" {
