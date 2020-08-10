@@ -356,7 +356,7 @@ pub struct lxc_container {
     /// ---
     /// **Returns**
     ///
-    /// `true` if state reached within `timeout,` else `false`.
+    /// `true` if state reached within `timeout`, else `false`.
     ///
     /// ---
     /// **note:** A `timeout` of `-1` means wait forever. A `timeout`
@@ -444,7 +444,7 @@ pub struct lxc_container {
     /// **t** Template to execute to instantiate the root filesystem and adjust
     /// the configuration.
     ///
-    /// **bdevtype** Backing store type to use (if `NULL,` `dir` will be used).
+    /// **bdevtype** Backing store type to use (if `NULL`, `dir` will be used).
     ///
     /// **specs** Additional parameters for the backing store (for example LVM
     /// volume group to use).
@@ -481,7 +481,7 @@ pub struct lxc_container {
     /// **t** Template to execute to instantiate the root filesystem and adjust
     /// the configuration.
     ///
-    /// **bdevtype** Backing store type to use (if `NULL,` `dir` will be used).
+    /// **bdevtype** Backing store type to use (if `NULL`, `dir` will be used).
     ///
     /// **specs** Additional parameters for the backing store (for example LVM
     /// volume group to use).
@@ -780,7 +780,7 @@ pub struct lxc_container {
     /// Length of `subsys` value, or < 0 on error.
     ///
     /// ---
-    /// **note:** If `retv` is `NULL,` `inlen` is ignored.
+    /// **note:** If `retv` is `NULL`, `inlen` is ignored.
     ///
     /// **note:** If `inlen` is smaller than required, the value written to
     /// `retv` will be truncated.
@@ -873,10 +873,10 @@ pub struct lxc_container {
     ///
     /// **c** Original container.
     ///
-    /// **newname** New name for the container. If `NULL,` the same name is
+    /// **newname** New name for the container. If `NULL`, the same name is
     /// used and a new lxcpath MUST be specified.
     ///
-    /// **lxcpath** lxcpath in which to create the new container. If `NULL,`
+    /// **lxcpath** lxcpath in which to create the new container. If `NULL`,
     /// the original container's lxcpath will be used.
     ///
     /// **flags** Additional `LXC_CLONE*` flags to change the cloning behaviour:
@@ -891,7 +891,7 @@ pub struct lxc_container {
     /// fstype and fsdata).
     ///
     /// **newsize** In case of a block device backing store, an optional size.
-    /// If `0,` the original backing store's size will be used if possible. Note
+    /// If `0`, the original backing store's size will be used if possible. Note
     /// this only applies to the rootfs. For any other filesystems, the original
     /// size will be duplicated.
     ///
@@ -900,7 +900,7 @@ pub struct lxc_container {
     /// ---
     /// **Returns**
     ///
-    /// Newly-allocated copy of container `c,` or `NULL` on error.
+    /// Newly-allocated copy of container `c`, or `NULL` on error.
     ///
     /// ---
     /// **note:** If devtype was not specified, and `flags` contains
@@ -1044,7 +1044,7 @@ pub struct lxc_container {
     /// ---
     /// **Returns**
     ///
-    /// `waitpid(2)` status of exited process that ran `program,` or `-1` on
+    /// `waitpid(2)` status of exited process that ran `program`, or `-1` on
     /// error.
     ///
     /// ---
@@ -1073,7 +1073,7 @@ pub struct lxc_container {
     /// ---
     /// **Returns**
     ///
-    /// `waitpid(2)` status of exited process that ran `program,` or `-1` on
+    /// `waitpid(2)` status of exited process that ran `program`, or `-1` on
     /// error.
     ///
     /// ---
@@ -1168,9 +1168,9 @@ pub struct lxc_container {
     /// fail if the  snapshot is overlay-based, since the snapshots
     /// will pin the original container.
     ///
-    /// **note:** As an example, if the container exists as `/var/lib/lxc/c1,`
-    /// snapname might be `'snap0'` (representing `/var/lib/lxcsnaps/c1/snap0)`.
-    /// If `newname` is `c2,` then `snap0` will be copied to `/var/lib/lxc/c2`.
+    /// **note:** As an example, if the container exists as `/var/lib/lxc/c1`,
+    /// snapname might be `snap0` (representing `/var/lib/lxc/c1/snaps/snap0)`.
+    /// If `newname` is `c2`, then `snap0` will be copied to `/var/lib/lxc/c2`.
     ///
     /// ---
     /// **version:** 1.0.0
@@ -1232,6 +1232,7 @@ pub struct lxc_container {
     ///
     /// ---
     /// **Returns**
+    ///
     /// `true` on success, else `false`.
     ///
     /// ---
@@ -1256,6 +1257,7 @@ pub struct lxc_container {
     ///
     /// ---
     /// **Returns**
+    ///
     /// `true` on success, else `false`.
     ///
     /// ---
@@ -1264,6 +1266,101 @@ pub struct lxc_container {
         c: *mut lxc_container,
         src_path: *const c_char,
         dest_path: *const c_char,
+    ) -> bool,
+
+    /// Add specified netdev to the container.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// **dev** name of net device.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `true` on success, else `false`.
+    ///
+    /// ---
+    /// **version:** 1.1.0
+    pub attach_interface: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        dev: *const c_char,
+        dst_dev: *const c_char,
+    ) -> bool,
+
+    /// Remove specified netdev from the container.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// **dev** name of net device.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `true` on success, else `false`.
+    ///
+    /// ---
+    /// **version:** 1.1.0
+    pub detach_interface: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        dev: *const c_char,
+        dst_dev: *const c_char,
+    ) -> bool,
+
+    /// Checkpoint a container.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// **directory** The directory to dump the container to.
+    ///
+    /// **stop** Whether or not to stop the container after checkpointing.
+    ///
+    /// **verbose** Enable criu's verbose logs.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `true` on success, else `false`.
+    ///
+    /// ---
+    /// **version:** 1.1.0
+    pub checkpoint: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        directory: *const c_char,
+        stop: bool,
+        verbose: bool,
+    ) -> bool,
+
+    /// Restore a container from a checkpoint.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// **directory** The directory to restore the container from.
+    ///
+    /// **verbose** Enable criu's verbose logs.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `true` on success, else `false`.
+    ///
+    /// ---
+    /// **version:** 1.1.0
+    pub restore: unsafe extern "C" fn(
+        c: *mut lxc_container,
+        directory: *const c_char,
+        verbose: bool,
     ) -> bool,
 }
 
@@ -1500,10 +1597,10 @@ extern "C" {
     ///
     /// **lxcpath** lxcpath under which to look.
     ///
-    /// **names** If not `NULL,` then a list of container names will be returned
+    /// **names** If not `NULL`, then a list of container names will be returned
     /// here.
     ///
-    /// **cret** If not `NULL,` then a list of lxc_containers will be returned
+    /// **cret** If not `NULL`, then a list of lxc_containers will be returned
     /// here.
     ///
     /// ---
