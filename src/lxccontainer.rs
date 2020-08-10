@@ -1620,6 +1620,15 @@ pub struct migrate_opts {
     /// ---
     /// **version:** 2.0.0
     pub pageserver_port: *mut c_char,
+
+    /// This flag indicates whether or not the container's rootfs will have
+    /// the same inodes on checkpoint and restore. In the case of e.g. zfs
+    /// send or btrfs send, or an LVM snapshot, this will be true, but it
+    /// won't if e.g. you rsync the filesystems between two machines.
+    ///
+    /// ---
+    /// **version:** 2.0.1
+    pub preserves_inodes: bool,
 }
 
 extern "C" {
