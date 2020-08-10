@@ -1629,6 +1629,30 @@ pub struct migrate_opts {
     /// ---
     /// **version:** 2.0.1
     pub preserves_inodes: bool,
+
+    /// Path to an executable script that will be registered as a criu
+    /// "action script"
+    ///
+    /// ---
+    /// **version:** 2.0.4
+    pub action_script: *mut c_char,
+
+    /// If CRIU >= 2.4 is detected the option to skip in-flight connections
+    /// will be enabled by default. The flag 'disable_skip_in_flight' will
+    /// unconditionally disable this feature. In-flight connections are
+    /// not fully established TCP connections: SYN, SYN-ACK
+    ///
+    /// ---
+    /// **version:** 2.0.4
+    pub disable_skip_in_flight: bool,
+
+    /// This is the maximum file size for deleted files (which CRIU calls
+    /// "ghost" files) that will be handled. 0 indicates the CRIU default,
+    /// which at this time is 1MB.
+    ///
+    /// ---
+    /// **version:** 2.0.4
+    pub ghost_limit: u64,
 }
 
 extern "C" {
