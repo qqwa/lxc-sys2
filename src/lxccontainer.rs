@@ -1362,6 +1362,43 @@ pub struct lxc_container {
         directory: *const c_char,
         verbose: bool,
     ) -> bool,
+
+    /// Delete the container and all its snapshots.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `true` on success, else `false`.
+    ///
+    /// ---
+    /// **note:** Container must be stopped.
+    ///
+    /// ---
+    /// **version:** 1.1.0
+    pub destroy_with_snapshots:
+        unsafe extern "C" fn(c: *mut lxc_container) -> bool,
+
+    /// Destroy all the container's snapshot.
+    ///
+    /// ---
+    /// **Parameters**
+    ///
+    /// **c** Container.
+    ///
+    /// ---
+    /// **Returns**
+    ///
+    /// `true` on success, else `false`.
+    ///
+    /// ---
+    /// **version:** 1.1.0
+    pub snapshot_destroy_all:
+        unsafe extern "C" fn(c: *mut lxc_container) -> bool,
 }
 
 /// An LXC container snapshot.
