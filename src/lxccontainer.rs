@@ -241,7 +241,7 @@ pub struct lxc_container {
         c: *mut lxc_container,
         useinit: c_int,
         argv: *const *mut c_char,
-    ),
+    ) -> bool,
 
     /// Start the container (list variant).
     ///
@@ -1455,7 +1455,7 @@ extern "C" {
         lxcpath: *const c_char,
         names: *mut *mut *mut c_char,
         cret: *mut *mut *mut lxc_container,
-    ) -> *const c_int;
+    ) -> c_int;
 
     /// Get a list of active containers for a given lxcpath.
     ///
@@ -1488,7 +1488,7 @@ extern "C" {
         lxcpath: *const c_char,
         names: *mut *mut *mut c_char,
         cret: *mut *mut *mut lxc_container,
-    ) -> *const c_int;
+    ) -> c_int;
 
     /// Get a complete list of all containers for a given lxcpath.
     ///
@@ -1521,5 +1521,5 @@ extern "C" {
         lxcpath: *const c_char,
         names: *mut *mut *mut c_char,
         cret: *mut *mut *mut lxc_container,
-    ) -> *const c_int;
+    ) -> c_int;
 }
