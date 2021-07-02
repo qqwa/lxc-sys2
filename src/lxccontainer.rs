@@ -1049,8 +1049,8 @@ pub struct lxc_container {
         c: *mut lxc_container,
         exec_function: crate::attach_options::lxc_attach_exec_t,
         exec_payload: *mut c_void,
-        options: crate::attach_options::lxc_attach_options_t,
-        attached_process: c_uint,
+        options: *const crate::attach_options::lxc_attach_options_t,
+        attached_process: *mut c_uint,
     ) -> c_int,
 
     /// Run a program inside a container and wait for it to exit.
